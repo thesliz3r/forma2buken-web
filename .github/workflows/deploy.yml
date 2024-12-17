@@ -13,13 +13,18 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Install Dependencies
-        run: npm install
+        run: |
+          if [ -f package.json ]; then
+            npm install
+          else
+            echo "package.json not found!" && exit 1
+          fi
 
-      - name: Deploy Files via FTP
+      - name: Deploy Files to FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: public_html/forma2buken-web/
-          local-dir: ./
+          local-dir: ./  # Path to your project root
+          server-dir: public_html/forma2buken-web/  # Target folder on your cPanel
