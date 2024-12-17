@@ -32,14 +32,13 @@ app.post('/upload', upload.array('files'), (req, res) => {
             return res.status(400).send("No files uploaded.");
         }
 
-        // Process files
         const processedFileName = `Processed_${Date.now()}.xlsx`;
         const processedFilePath = path.join(__dirname, 'results', processedFileName);
 
         const workbook = xlsx.utils.book_new();
         const data = [];
 
-        // Read and extract data from all Excel files
+        // Process Excel files
         files.forEach((file) => {
             const filePath = file.path;
             if (path.extname(file.originalname) === ".xlsx" || path.extname(file.originalname) === ".xls") {
@@ -53,12 +52,10 @@ app.post('/upload', upload.array('files'), (req, res) => {
             }
         });
 
-        // Write processed data to a new Excel file
         const newSheet = xlsx.utils.json_to_sheet(data);
         xlsx.utils.book_append_sheet(workbook, newSheet, "ProcessedData");
         xlsx.writeFile(workbook, processedFilePath);
 
-        // Return download link
         res.status(200).json({ 
             message: "Files uploaded and processed successfully!", 
             downloadLink: `/results/${processedFileName}` 
@@ -69,7 +66,6 @@ app.post('/upload', upload.array('files'), (req, res) => {
     }
 });
 
-// Start the server
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
