@@ -3,7 +3,7 @@ name: Deploy to Namecheap Hosting
 on:
   push:
     branches:
-      - main  # Trigger deployment when code is pushed to the main branch
+      - main
 
 jobs:
   deploy:
@@ -11,13 +11,15 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3  # Fetch the latest code from GitHub
+        uses: actions/checkout@v3
 
       - name: Deploy to FTP Server
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: ${{ secrets.FTP_HOST }}      # FTP server (ftp.forma2app.xyz)
-          username: ${{ secrets.FTP_USER }}    # FTP username
-          password: ${{ secrets.FTP_PASS }}    # FTP password
-          server-dir: /public_html/forma2buken-web/  # Target folder on the server
-          local-dir: ./public/                 # Upload only the CONTENTS of "public" folder
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASS }}
+          server-dir: /public_html/forma2buken-web/  # Correct directory
+          local-dir: ./public/                    # Upload only the CONTENTS of "public" folder
+          dry-run: false
+          log-level: verbose
