@@ -11,13 +11,13 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3  # Checkout your code
+        uses: actions/checkout@v3  # Fetch the latest code from GitHub
 
       - name: Deploy to FTP Server
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: ${{ secrets.FTP_HOST }}      # FTP server (e.g., ftp.forma2app.xyz)
+          server: ${{ secrets.FTP_HOST }}      # FTP server (ftp.forma2app.xyz)
           username: ${{ secrets.FTP_USER }}    # FTP username
           password: ${{ secrets.FTP_PASS }}    # FTP password
-          server-dir: ${{ secrets.FTP_DIR }}   # Target directory on the server
-          local-dir: ./                        # Upload all files from the repository root
+          server-dir: /public_html/forma2buken-web/  # Correct directory on the server
+          local-dir: ./public/                 # Upload the contents of the local "public" folder
