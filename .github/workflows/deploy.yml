@@ -1,0 +1,23 @@
+name: Deploy to Namecheap Hosting
+
+on:
+  push:
+    branches:
+      - main  # Trigger this workflow when code is pushed to 'main' branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3  # Pull the latest code from GitHub
+
+      - name: Deploy to FTP Server
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_HOST }}  # FTP host from GitHub Secrets
+          username: ${{ secrets.FTP_USER }}  # FTP username from GitHub Secrets
+          password: ${{ secrets.FTP_PASS }}  # FTP password from GitHub Secrets
+          server-dir: ${{ secrets.FTP_DIR }}  # Directory on Namecheap hosting
+          local-dir: ./  # Deploy all files from the repository root
