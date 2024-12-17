@@ -3,7 +3,7 @@ name: Deploy to Namecheap Hosting
 on:
   push:
     branches:
-      - main  # Trigger deployment on push to the main branch
+      - main
 
 jobs:
   deploy:
@@ -11,15 +11,15 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3  # Fetch your repository code
+        uses: actions/checkout@v3
 
       - name: Deploy to FTP Server
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: ${{ secrets.FTP_HOST }}       # FTP server address
-          username: ${{ secrets.FTP_USER }}     # FTP username
-          password: ${{ secrets.FTP_PASS }}     # FTP password
-          server-dir: ${{ secrets.FTP_DIR }}    # Directory on the server
-          local-dir: ./public/                  # Upload the CONTENTS of the "public" folder
-          dry-run: false                        # Ensure this is a real deployment
-          log-level: verbose                    # Enable detailed logs
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASS }}
+          server-dir: ${{ secrets.FTP_DIR }}
+          local-dir: ./public/
+          dry-run: false
+          log-level: verbose
