@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FORMA-2 BÜKƏN</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+
+        #dropArea {
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 20px auto;
+            width: 80%;
+            color: #333;
+            font-size: 18px;
+        }
+
+        #dropArea.hover {
+            border-color: #666;
+            background-color: #f0f8ff;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #downloadLink {
+            display: none;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>FORMA-2 BÜKƏN</h1>
+
+    <!-- Drag and Drop Area -->
+    <div id="dropArea">Drag and Drop Files or Folders Here</div>
+
+    <!-- Upload Folder -->
+    <form id="uploadForm" enctype="multipart/form-data">
+        <label for="folderInput">Upload Folder: </label>
+        <input type="file" id="folderInput" name="files" webkitdirectory multiple>
+        <button type="submit">Upload and Process</button>
+    </form>
+
+    <p id="message"></p>
+    <a id="downloadLink" href="#" download>Download Processed File</a>
+
+    <script>
+        const dropArea = document.getElementById("dropArea");
+        const folderInput = document.getElementById("folderInput");
+        const message = document.getElementById("message");
+        const downloadLink = document.getElementById("downloadLink");
+
+        // Drag and Drop Events
+        dropArea.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            dropArea.classList.add("hover");
+        });
+
+        dropArea.addEventListener("dragleave", () => {
+            dropArea.classList.remove("hover");
+        });
+
+        dropArea.addEventListener("drop", (e) => {
+            e.preventDefault();
+            dropArea.classList.remove("hover");
+
+            const files = e.dataTransfer.files;
+            const formData = new FormData();
+
+            for (const file of files) {
+                formData.append("files", file);
+            }
+
+            uploadFiles(formData);
+        });
+
+        // Upload Folder Submit
+        document.getElementById("uploadForm").addEventListener("submit", (e) => {
+            e.preventDefault();
+            const formData = new FormData(document.getElementById("uploadForm"));
+            uploadFiles(formData);
+        });
+
+        // Function to Upload Files
+        async function uploadFiles(formData) {
+            message.textContent = "Uploading...";
+            downloadLink.style.display = "none";
+            try {
+                const response = await fetch("http://localhost:3000/upload", {
+                    method: "POST",
+                    body: formData,
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    message.textContent = data.message;
+
+                    // Show the download button
+                    downloadLink.href = data.downloadLink;
+                    downloadLink.style.display = "block";
+                    downloadLink.textContent = "Download Processed File";
+                } else {
+                    message.textContent = "Error processing files.";
+                }
+            } catch (err) {
+                message.textContent = `Error: ${err.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
